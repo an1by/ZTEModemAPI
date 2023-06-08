@@ -31,8 +31,10 @@ def main():
         utils.debug('Отсутствуют данные для авторизации', "error", force=True)
         return
     
-    modem.auth(True)
-    utils.debug(modem.getData(['SSID1']).json(), force=True)
+    # modem.auth(True)
+    # utils.debug(modem.getSomething(['SSID1']).json(), force=True)
+    # for message in modem.getSMSList():
+    #     print(message)
 
 if __name__ == '__main__':
     main()

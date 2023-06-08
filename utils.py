@@ -63,3 +63,9 @@ def generateRequestURL(url: str, params: dict[str, str]) -> str:
     req = PreparedRequest()
     req.prepare_url(url, params)
     return req.url
+
+def fromHex(text: str):
+    res=''
+    for i in range(4,len(text),4):
+        res += chr(int(text[i-4:i],16))
+    return res;
