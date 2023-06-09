@@ -9,8 +9,14 @@ def main():
     parser.add_argument('--file', metavar='F', help='Settings file in json format with "ip" and "password" keys.')
     parser.add_argument('--ip', metavar='I', help='IP-address where hosts modem\'s GUI. By default: "192.168.0.1".')
     parser.add_argument('--password', metavar='P', help='Password for modem\'s GUI. By default: "admin"')
-    parser.add_argument('--debug', action=argparse.BooleanOptionalAction, metavar='D', help='Debug feature.')
+    parser.add_argument('--get', metavar='G', help='Data what you need from modem. Format: "attribute1 attribute2 &etc..."')
+    parser.add_argument('--debug', action=argparse.BooleanOptionalAction, help='Debug feature.')
     args = parser.parse_args()
+
+    if (not args.get) or (len(args.get.split(' ')) <= 0):
+        utils.debug('Except data for get', "error", True)
+        return
+    dataToGet = args.get.split(' ')
 
     if args.debug:
         utils.debug_feature = True
@@ -28,13 +34,17 @@ def main():
         if args.ip:
             modem.ip = args.ip
     else:
-        utils.debug('Отсутствуют данные для авторизации', "error", force=True)
+        utils.debug('Except data for authorization', "error", True)
         return
     
-    # modem.auth(True)
-    # utils.debug(modem.getSomething(['SSID1']).json(), force=True)
-    # for message in modem.getSMSList():
-    #     print(message)
+    modem.auth(True)
+    if "sms_list" in dataToGet:
+        utils.debug(modem.getSMSList(), force=True)
+        dataToGet.remove("sms_list")
+    if "main_info" in dataToGet:
+        utils.debug(modem.getInfo(), force=True)
+        dataToGet.remove("main_info")
+    utils.debug(modem.getSomething(dataToGet), force=True)
 
 if __name__ == '__main__':
     main()

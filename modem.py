@@ -4,6 +4,7 @@ from utils import base64_encode, modem_headers, debug, generateRequestURL, fromH
 ip = "192.168.0.1"
 password = "admin"
 stok_cookie = None
+store_messages = False
 
 def getCookie(cookie = None):
     if not cookie:
@@ -43,7 +44,7 @@ def getSomething(data: list[str], cookie = None):
     cookie = getCookie(cookie)
     params = {
         "isTest": 'false',
-        'cmd': data,
+        'cmd': '%2C'.join(data),
         'multi_data': 1
     }
     url = generateRequestURL("http://%s/goform/goform_get_cmd_process" % ip, params)
@@ -54,7 +55,7 @@ def getSomething(data: list[str], cookie = None):
         cookies=cookie
     )
     debug(f"Get data: {answer}")
-    return answer
+    return answer.json()
 
 def getSMSList(cookie = None):
     cookie = getCookie(cookie)
@@ -83,3 +84,11 @@ def getSMSList(cookie = None):
         msg['content'] = fromHex(msg['content'])
         toReturn.append(msg)
     return toReturn
+
+def getInfo(cookie = None):
+    return {
+        "main": getSomething(['SSID1', 'AuthMode', 'lan_ipaddr', 'lan_ipaddr', 'wan_ipaddr', 'router_mode_gateway', 'dhcpStart', 'dhcpEnd', 'LocalDomain'], cookie),
+        "network": getSomething(['network_type', 'network_provider', 'network_provider_fullname', 'net_select', 'wan_active_band', 'm_profile_name'], cookie),
+        "versions": getSomething(['hardware_version', 'web_version', 'wa_inner_version'], cookie),
+        "important": getSomething(['imei', 'modem_msn', 'BSSID', 'sim_iccid', 'cell_id', 'sim_imsi', 'rplmn_num', 'enodeb_id'], cookie)
+    }
