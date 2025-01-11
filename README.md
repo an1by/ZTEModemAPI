@@ -1,5 +1,16 @@
 # ZTE Modem API by [An1by](https://aniby.net)
 This is Python API-Library for managing ZTE USB-modems.
+### Requirements
+
+Use python 3.10.
+
+There is a `requirements.txt` file, you may install them in a custom virtualenv, like this:
+```
+virtualenv ~/venv/zte
+source ~/venv/zte/bin/activate
+pip install -r requirements.txt
+```
+
 ### Tested on:
 * ZTE MF79U
 #
